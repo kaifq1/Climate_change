@@ -1,6 +1,3 @@
-/* MuSo Climate Clock
-   Same-device sync:  localStorage + BroadcastChannel
-   Cross-device sync: Supabase Realtime broadcast (facilitator phone ↔ big screen)   */
 
 // Official Climate Clock 1.5°C deadline (carbon_deadline_1 from api.climateclock.world)
 let BASE_DEADLINE = new Date('2029-07-22T16:00:00+00:00');
@@ -162,6 +159,35 @@ function resetAll() {
   refreshFacilitator();
 }
 
+// ─── fullscreen (timer only) ───
+// Tries the native Fullscreen API; if the browser/kiosk refuses it,
+// falls back to a CSS overlay so the timer still fills the screen.
+function toggleClockFullscreen() {
+  const el = document.getElementById('clockWrap');
+  const inNative = document.fullscreenElement || document.webkitFullscreenElement;
+  const inFaux = document.body.classList.contains('faux-fs');
+
+  if (inNative) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+  if (inFaux) { document.body.classList.remove('faux-fs'); return; }
+
+  const req = el.requestFullscreen || el.webkitRequestFullscreen;
+  try {
+    const p = req && req.call(el);
+    if (p && p.catch) p.catch(() => document.body.classList.add('faux-fs'));
+    else if (!req) document.body.classList.add('faux-fs');
+  } catch (err) {
+    document.body.classList.add('faux-fs'); // native API refused synchronously
+  }
+}
+// Esc leaves the CSS-fallback mode (native fullscreen handles Esc itself)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.body.classList.remove('faux-fs');
+});
+// In the touch-friendly CSS-fallback mode, tapping the timer also exits
+document.getElementById('clockWrap').addEventListener('click', () => {
+  if (document.body.classList.contains('faux-fs')) document.body.classList.remove('faux-fs');
+});
+
 // ─── student / big screen ───
 let lastTotal = null, bannerTimer = null;
 
@@ -179,7 +205,7 @@ function renderClock() {
   const s = sec % 60;
 
   setNum('cYrs', years);
-  setNum('cDays', String(days).padStart(3, '0'));
+  setNum('cDays', String(days));
   setNum('cHrs', String(hrs).padStart(2, '0'));
   setNum('cMin', String(min).padStart(2, '0'));
   setNum('cSec', String(s).padStart(2, '0'));
