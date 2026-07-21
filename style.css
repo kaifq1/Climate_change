@@ -1,8 +1,3 @@
-/* ─── MuSo brand palette (from brand guidelines PDF) ───
-   Bright Red U  #EC3730 (logo red)   Pantone 226 U  #F000B1
-   Pantone 284 U #85D9FF              Pantone 3405 U #3AFF35
-   Pantone 7406 U #F0B705             Warm Gray 1 U  #DEE0D3
-   Black         #0E1111                                        */
 
 :root {
   --red: #EC3730;
@@ -86,6 +81,48 @@ body {
   text-align: center; border: 5px solid var(--red);
   box-shadow: 10px 10px 0 rgba(14,17,17,.25);
   transition: box-shadow .3s;
+}
+
+/* small fullscreen-timer button */
+.btn-fullscreen {
+  align-self: center; font-family: inherit; cursor: pointer; font-weight: 700;
+  font-size: .9rem; color: var(--ink); background: var(--amber);
+  border: 3px solid var(--ink); border-radius: 999px; padding: 8px 18px;
+  box-shadow: 4px 4px 0 var(--ink); transition: transform .12s;
+}
+.btn-fullscreen:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+
+/* when the timer alone is fullscreen: only the clock, centred on black */
+.clock-wrap:fullscreen {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  width: 100vw; height: 100vh; border: none; border-radius: 0;
+  box-shadow: none; padding: 0;
+}
+.clock-wrap:fullscreen .clock { gap: clamp(8px, 1.5vw, 26px); }
+.clock-wrap:fullscreen .clock-cell { min-width: clamp(90px, 13vw, 240px); }
+.clock-wrap:fullscreen .clock-cell .num { font-size: clamp(4rem, 15vw, 15rem); }
+.clock-wrap:fullscreen .clock-cell .lbl { font-size: clamp(.8rem, 1.8vw, 1.6rem); }
+.clock-wrap:fullscreen .clock-sep { font-size: clamp(3rem, 11vw, 11rem); }
+.clock-wrap:fullscreen .deadline-line { font-size: clamp(1rem, 2.4vw, 2rem); margin-top: 24px; }
+.clock-wrap.gain:fullscreen, .clock-wrap.lose:fullscreen { animation: none; }
+
+/* CSS fallback fullscreen (when the native API is blocked) */
+body.faux-fs #clockWrap {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  width: 100vw; height: 100vh; border: none; border-radius: 0; box-shadow: none; padding: 0;
+}
+body.faux-fs #clockWrap .clock { gap: clamp(8px, 1.5vw, 26px); }
+body.faux-fs #clockWrap .clock-cell { min-width: clamp(90px, 13vw, 240px); }
+body.faux-fs #clockWrap .clock-cell .num { font-size: clamp(4rem, 15vw, 15rem); }
+body.faux-fs #clockWrap .clock-cell .lbl { font-size: clamp(.8rem, 1.8vw, 1.6rem); }
+body.faux-fs #clockWrap .clock-sep { font-size: clamp(3rem, 11vw, 11rem); }
+body.faux-fs #clockWrap .deadline-line { font-size: clamp(1rem, 2.4vw, 2rem); margin-top: 24px; }
+/* small exit hint in the corner while in CSS-fallback mode */
+body.faux-fs #clockWrap::after {
+  content: "Press Esc or tap the timer to exit";
+  position: absolute; bottom: 18px; right: 22px;
+  font-size: .85rem; color: var(--cream); opacity: .55; font-weight: 600;
 }
 .clock { display: flex; justify-content: center; align-items: baseline; gap: clamp(4px, 1vw, 18px); flex-wrap: wrap; }
 .clock-cell { display: flex; flex-direction: column; align-items: center; min-width: clamp(70px, 11vw, 190px); }
