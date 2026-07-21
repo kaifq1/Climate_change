@@ -58,11 +58,13 @@
     <button class="btn-ghost" onclick="setRole(null)">⌂</button>
   </header>
 
+  <button class="btn-fullscreen" id="fsBtn" onclick="toggleClockFullscreen()" title="Show only the timer, fullscreen">⛶ Fullscreen timer</button>
+
   <div class="clock-wrap" id="clockWrap">
     <div class="clock">
       <div class="clock-cell"><span class="num" id="cYrs">0</span><span class="lbl">YEARS</span></div>
       <div class="clock-sep">:</div>
-      <div class="clock-cell"><span class="num" id="cDays">000</span><span class="lbl">DAYS</span></div>
+      <div class="clock-cell"><span class="num" id="cDays">0</span><span class="lbl">DAYS</span></div>
       <div class="clock-sep">:</div>
       <div class="clock-cell"><span class="num" id="cHrs">00</span><span class="lbl">HOURS</span></div>
       <div class="clock-sep">:</div>
